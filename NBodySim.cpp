@@ -39,23 +39,22 @@ int main(int argc, char* argv[])
     }
 
     // Initialize command line output manager
-    std::unique_ptr<CmdLnManager> cmdLnManager = std::make_unique<CmdLnManager>(verbosity);
+    CmdLnManager::set_verbosity( verbosity );
 
     // Load configuration file
     std::string configFileName = "config.yaml";
     if (varMap.count("config")) {
         configFileName = varMap["config"].as<std::string>();
-        cmdLnManager->PrintMessage("Loading configuration file: " + configFileName, CmdLnManager::kDebug);
+        OUT( mDebug ) << "Configuration file: " << configFileName;
     }
     YAML::Node configFile = YAML::LoadFile(configFileName);
     if( !configFile ) {
-        cmdLnManager->PrintMessage("Configuration file not found", CmdLnManager::kFatal);
+        OUT( mError ) << "Failed to load configuration file: " << configFileName;
         return 1;
     }
 
     // Load output file
     std::string outputFileName = "output.root";
-    if (varMap.count
     if (varMap.count("output")) {
         outputFileName = varMap["output"].as<std::string>();
     }
